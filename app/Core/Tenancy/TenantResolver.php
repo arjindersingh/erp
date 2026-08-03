@@ -33,6 +33,8 @@ class TenantResolver
         return TenantDomain::query()
             ->with('tenant')
             ->where('domain', $host)
+            ->where('status', DomainStatus::Active->value)
+            ->where('is_verified', true)
             ->first();
     }
 

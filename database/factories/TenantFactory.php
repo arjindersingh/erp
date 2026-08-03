@@ -16,11 +16,21 @@ class TenantFactory extends Factory
         $name = fake()->unique()->company().' Education';
 
         return [
+            'uuid' => (string) Str::uuid(),
             'name' => $name,
             'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(100, 999),
             'code' => strtoupper(fake()->unique()->bothify('???###')),
             'status' => 'active',
+            'timezone' => 'Asia/Kolkata',
+            'locale' => 'en',
+            'currency' => 'INR',
+            'branding' => [],
             'settings' => [],
         ];
+    }
+
+    public function suspended(): static
+    {
+        return $this->state(fn (): array => ['status' => 'suspended']);
     }
 }

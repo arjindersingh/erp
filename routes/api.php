@@ -1,21 +1,15 @@
 <?php
 
+use App\Core\System\SystemHealthService;
 use App\Http\Middleware\ResolvePublicTenant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(ResolvePublicTenant::class)->group(function (): void {
-    Route::get('/health', function () {
-        DB::select('select 1');
+    Route::get('/health', function (SystemHealthService $health) {
+        $status = $health->publicStatus();
 
-        return response()->json([
-            'status' => 'ok',
-            'service' => config('app.name'),
-            'environment' => app()->environment(),
-            'database' => 'connected',
-            'timestamp' => now()->toISOString(),
-        ]);
+        return response()->json($status, $status['status'] === 'ok' ? 200 : 503);
     })->name('api.health');
 
     Route::get('/user', function (Request $request) {

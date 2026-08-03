@@ -2,9 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Core\Tenancy\CurrentTenant;
 use App\Core\Tenancy\Exceptions\TenantCouldNotBeResolved;
 use App\Core\Tenancy\Tenant;
+use App\Core\Tenancy\TenantContext;
 use App\Core\Tenancy\TenantResolver;
 use Closure;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ResolvePublicTenant
 {
     public function __construct(
-        protected CurrentTenant $currentTenant,
+        protected TenantContext $tenantContext,
         protected TenantResolver $tenantResolver,
     ) {}
 
@@ -22,7 +22,7 @@ class ResolvePublicTenant
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $this->currentTenant->clear();
+        $this->tenantContext->clear();
 
         if ($this->tenantResolver->isCentralDomain($request) && config('tenancy.public_resolution.allow_central_domains', true)) {
             return $next($request);
@@ -31,7 +31,7 @@ class ResolvePublicTenant
         $domain = $this->tenantResolver->resolvePublicTenant($request);
 
         if ($domain !== null && $domain->tenant instanceof Tenant) {
-            $this->currentTenant->set($domain->tenant, $domain);
+            $this->tenantContext->activate($domain->tenant, $domain);
             $request->attributes->set('tenant', $domain->tenant);
             $request->attributes->set('tenant_domain', $domain);
 

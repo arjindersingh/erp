@@ -11,6 +11,7 @@ use App\Core\Organization\Company;
 use App\Core\Organization\Institute;
 use App\Core\Organization\InstituteType;
 use App\Models\User;
+use App\Shared\Support\HasPublicUuid;
 use Database\Factories\TenantFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -23,15 +24,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 #[UseFactory(TenantFactory::class)]
-#[Fillable(['name', 'slug', 'code', 'status', 'settings'])]
+#[Fillable(['uuid', 'name', 'legal_name', 'slug', 'code', 'status', 'timezone', 'locale', 'currency', 'branding', 'settings'])]
 class Tenant extends Model
 {
     /** @use HasFactory<TenantFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasPublicUuid, SoftDeletes;
+
+    protected $attributes = [
+        'status' => TenantStatus::Active->value,
+        'timezone' => 'UTC',
+        'locale' => 'en',
+        'currency' => 'INR',
+    ];
 
     protected function casts(): array
     {
         return [
+            'status' => TenantStatus::class,
+            'branding' => 'array',
             'settings' => 'array',
         ];
     }
@@ -64,6 +74,16 @@ class Tenant extends Model
     public function domains(): HasMany
     {
         return $this->hasMany(TenantDomain::class);
+    }
+
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(TenantSubscription::class);
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status->allowsRequests() && ! $this->trashed();
     }
 
     public function accessScopes(): HasMany

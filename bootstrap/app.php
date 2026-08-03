@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\Tenancy\Exceptions\TenantCouldNotBeResolved;
+use App\Http\Middleware\EnsureTenantIsActive;
 use App\Http\Middleware\ResolvePublicTenant;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,12 +16,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->redirectGuestsTo(fn (): string => route('home'));
+
         $middleware->appendToGroup('web', [
             ResolvePublicTenant::class,
+            EnsureTenantIsActive::class,
         ]);
 
         $middleware->appendToGroup('api', [
             ResolvePublicTenant::class,
+            EnsureTenantIsActive::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
