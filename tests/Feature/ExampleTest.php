@@ -14,6 +14,11 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response
+            ->assertStatus(200)
+            ->assertViewIs('home')
+            ->assertSee('Run every campus from one')
+            ->assertSee(route('api.health'), false)
+            ->assertSee(route('modules.health'), false);
     }
 }
