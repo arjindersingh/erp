@@ -1,8 +1,8 @@
 <?php
 
+use App\Core\Authorization\Permission;
+use App\Core\Authorization\Role;
 use Spatie\Permission\DefaultTeamResolver;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 return [
 
@@ -85,7 +85,7 @@ return [
          * basic default value but you may easily change it to any table you like.
          */
 
-        'role_has_permissions' => 'role_has_permissions',
+        'role_has_permissions' => 'role_permissions',
     ],
 
     'column_names' => [

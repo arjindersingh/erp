@@ -1,0 +1,86 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Core\Audit;
+
+enum AuditAction: string
+{
+    case LoginSucceeded = 'login_succeeded';
+    case LoginFailed = 'login_failed';
+    case Logout = 'logout';
+    case PasswordChanged = 'password_changed';
+    case PasswordResetRequested = 'password_reset_requested';
+    case PasswordResetCompleted = 'password_reset_completed';
+    case EmailVerified = 'email_verified';
+    case MobileVerified = 'mobile_verified';
+    case AccountActivated = 'account_activated';
+    case AccountLocked = 'account_locked';
+    case AccountUnlocked = 'account_unlocked';
+    case SessionRevoked = 'session_revoked';
+    case TwoFactorEnabled = 'two_factor_enabled';
+    case TwoFactorDisabled = 'two_factor_disabled';
+    case PermissionAllowed = 'permission_allowed';
+    case PermissionDenied = 'permission_denied';
+    case RoleAssigned = 'role_assigned';
+    case RoleRemoved = 'role_removed';
+    case PermissionGranted = 'permission_granted';
+    case PermissionRevoked = 'permission_revoked';
+    case UserOverrideGranted = 'user_override_granted';
+    case UserOverrideRevoked = 'user_override_revoked';
+    case PortalAccessGranted = 'portal_access_granted';
+    case PortalAccessRevoked = 'portal_access_revoked';
+    case ScopeAccessChanged = 'scope_access_changed';
+    case Viewed = 'viewed';
+    case Created = 'created';
+    case Updated = 'updated';
+    case Deleted = 'deleted';
+    case SoftDeleted = 'soft_deleted';
+    case Restored = 'restored';
+    case Archived = 'archived';
+    case Unarchived = 'unarchived';
+    case Locked = 'locked';
+    case Unlocked = 'unlocked';
+    case Duplicated = 'duplicated';
+    case Merged = 'merged';
+    case Split = 'split';
+    case Submitted = 'submitted';
+    case Verified = 'verified';
+    case Approved = 'approved';
+    case Rejected = 'rejected';
+    case Returned = 'returned';
+    case Cancelled = 'cancelled';
+    case Reopened = 'reopened';
+    case Escalated = 'escalated';
+    case Delegated = 'delegated';
+    case Published = 'published';
+    case Unpublished = 'unpublished';
+    case Finalized = 'finalized';
+    case Reversed = 'reversed';
+    case Uploaded = 'uploaded';
+    case Downloaded = 'downloaded';
+    case Printed = 'printed';
+    case Previewed = 'previewed';
+    case Shared = 'shared';
+    case Replaced = 'replaced';
+    case Removed = 'removed';
+    case ImportStarted = 'import_started';
+    case ImportCompleted = 'import_completed';
+    case ImportFailed = 'import_failed';
+    case ImportRolledBack = 'import_rolled_back';
+    case ExportRequested = 'export_requested';
+    case ExportCompleted = 'export_completed';
+    case ExportDownloaded = 'export_downloaded';
+    case ExportFailed = 'export_failed';
+    case SettingChanged = 'setting_changed';
+    case ModuleEnabled = 'module_enabled';
+    case ModuleDisabled = 'module_disabled';
+    case MigrationExecuted = 'migration_executed';
+    case JobStarted = 'job_started';
+    case JobCompleted = 'job_completed';
+    case JobFailed = 'job_failed';
+    case BackupCreated = 'backup_created';
+    case BackupFailed = 'backup_failed';
+    case IntegrationCalled = 'integration_called';
+    case IntegrationFailed = 'integration_failed';
+}

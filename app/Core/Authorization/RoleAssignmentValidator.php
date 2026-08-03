@@ -50,6 +50,14 @@ class RoleAssignmentValidator
             throw InvalidRoleAssignment::because('assignment scope is not active.');
         }
 
+        $role = Role::query()->find($assignment->role_id);
+
+        if ($role === null
+            || ($role->tenant_id !== null && $role->tenant_id !== (int) $assignment->tenant_id)
+            || ! $role->isAssignable()) {
+            throw InvalidRoleAssignment::because('role is not assignable within this tenant.');
+        }
+
         $this->setActiveIdentityKey($assignment);
     }
 
