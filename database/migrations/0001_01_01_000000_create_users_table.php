@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +15,26 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->string('name');
+            $table->string('account_type')->default('person')->index();
+            $table->string('username')->nullable()->unique();
             $table->string('email')->unique();
+            $table->string('mobile')->nullable()->unique();
+            $table->string('status')->default('pending')->index();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->timestamp('mobile_verified_at')->nullable();
+            $table->string('password')->nullable();
+            $table->timestamp('last_login_at')->nullable()->index();
+            $table->string('last_login_ip', 45)->nullable();
+            $table->unsignedSmallInteger('failed_login_attempts')->default(0);
+            $table->timestamp('locked_until')->nullable()->index();
+            $table->boolean('must_change_password')->default(false);
+            $table->timestamp('password_changed_at')->nullable();
+            $table->timestamp('password_expires_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
