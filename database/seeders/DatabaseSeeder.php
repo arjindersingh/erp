@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             SystemVersionSeeder::class,
             TenantFoundationSeeder::class,
+            PlatformFoundationSeeder::class,
             CoreModuleSeeder::class,
             CorePermissionSeeder::class,
             AcademicFoundationSeeder::class,

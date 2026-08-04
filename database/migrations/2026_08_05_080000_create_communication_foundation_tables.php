@@ -375,37 +375,6 @@ return new class extends Migration
             $table->index(['tenant_id', 'communication_profile_id', 'user_id']);
         });
 
-        Schema::create('communication_working_hours', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('uuid')->unique();
-            $table->foreignId('tenant_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('code')->unique();
-            $table->string('name');
-            $table->string('timezone')->default('UTC');
-            $table->json('working_days_json')->nullable();
-            $table->time('start_time')->nullable();
-            $table->time('end_time')->nullable();
-            $table->unsignedBigInteger('holiday_calendar_id')->nullable();
-            $table->boolean('allow_emergency_override')->default(false);
-            $table->string('status')->default('active')->index();
-            $table->timestamps();
-        });
-
-        Schema::create('communication_rate_limit_policies', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('uuid')->unique();
-            $table->foreignId('tenant_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('code')->unique();
-            $table->string('name');
-            $table->unsignedInteger('per_minute_limit')->nullable();
-            $table->unsignedInteger('per_hour_limit')->nullable();
-            $table->unsignedInteger('per_day_limit')->nullable();
-            $table->unsignedInteger('recipient_daily_limit')->nullable();
-            $table->unsignedInteger('bulk_batch_size')->nullable();
-            $table->unsignedInteger('batch_delay_seconds')->nullable();
-            $table->string('status')->default('active')->index();
-            $table->timestamps();
-        });
     }
 
     public function down(): void

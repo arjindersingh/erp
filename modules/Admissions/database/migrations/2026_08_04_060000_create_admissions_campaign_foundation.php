@@ -98,7 +98,6 @@ return new class extends Migration
             $table->string('applicant_confirmation_method')->nullable();
             $table->timestamp('applicant_confirmed_at')->nullable();
             $table->string('status')->default('draft')->index();
-            $table->timestamp('submitted_at')->nullable();
             $table->string('submission_ip', 45)->nullable();
             $table->text('submission_user_agent')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Platform;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 final class TransactionalOutboxWriter
 {
@@ -14,7 +15,7 @@ final class TransactionalOutboxWriter
             $event->save();
 
             return OutboxMessage::query()->create([
-                'uuid' => (string) \Illuminate\Support\Str::uuid(),
+                'uuid' => (string) Str::uuid(),
                 'tenant_id' => $event->tenant_id,
                 'domain_event_id' => $event->id,
                 'topic' => 'domain.events',

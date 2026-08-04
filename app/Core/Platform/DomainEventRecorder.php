@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Core\Platform;
 
 use App\Core\Attribution\ActorContext;
-use Illuminate\Support\Arr;
+use App\Core\Tenancy\CurrentTenant;
+use App\Core\Tenancy\TenantContext;
 use Illuminate\Support\Str;
 
 final class DomainEventRecorder
@@ -15,7 +16,7 @@ final class DomainEventRecorder
     {
         $event = DomainEvent::query()->create([
             'uuid' => (string) Str::uuid(),
-            'tenant_id' => $actorContext?->tenantId ?? app('currentTenant')?->id() ?? null,
+            'tenant_id' => $actorContext?->tenantId ?? $this->tenantIdFromContainer() ?? null,
             'aggregate_type' => $aggregateType,
             'aggregate_id' => $aggregateId,
             'event_name' => $eventName,
@@ -31,6 +32,19 @@ final class DomainEventRecorder
         $this->outbox($event);
 
         return $event;
+    }
+
+    private function tenantIdFromContainer(): ?int
+    {
+        if (app()->bound(CurrentTenant::class)) {
+            return app(CurrentTenant::class)->id();
+        }
+
+        if (app()->bound(TenantContext::class)) {
+            return app(TenantContext::class)->id();
+        }
+
+        return null;
     }
 
     private function outbox(DomainEvent $event): void

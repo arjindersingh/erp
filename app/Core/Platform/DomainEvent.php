@@ -19,6 +19,15 @@ class DomainEvent extends Model
 
     protected $guarded = ['id'];
 
+    public function getAttribute($key)
+    {
+        if ($key === 'updated_by_user_id' || $key === 'updated_actor_type' || $key === 'updated_authentication_state' || $key === 'updated_via' || $key === 'updated_request_id' || $key === 'updated_correlation_id') {
+            return null;
+        }
+
+        return parent::getAttribute($key);
+    }
+
     protected function casts(): array
     {
         return [
