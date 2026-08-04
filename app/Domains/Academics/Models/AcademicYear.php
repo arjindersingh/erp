@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domains\Academics\Models;
 
+use App\Core\Authorization\AccessScope;
 use App\Domains\Academics\Enums\AcademicYearStatus;
 use App\Shared\Support\BelongsToTenant;
 use App\Shared\Support\HasPublicUuid;
@@ -11,6 +12,7 @@ use Database\Factories\AcademicYearFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Validation\ValidationException;
 
@@ -57,5 +59,28 @@ final class AcademicYear extends Model
     public function isReadOnly(): bool
     {
         return $this->status->isReadOnly();
+    }
+
+    public function scopeAssignments(): HasMany
+    {
+        return $this->hasMany(AcademicYearScopeAssignment::class);
+    }
+
+    public function locks(): HasMany
+    {
+        return $this->hasMany(AcademicYearLock::class);
+    }
+
+    public function containsScope(AccessScope $scope): bool
+    {
+        return (int) $this->tenant_id === (int) $scope->tenant_id
+            && ($this->company_id === null || (int) $this->company_id === (int) $scope->company_id)
+            && ($this->campus_id === null || (int) $this->campus_id === (int) $scope->campus_id)
+            && ($this->institute_id === null || (int) $this->institute_id === (int) $scope->institute_id);
+    }
+
+    public function isSelectable(): bool
+    {
+        return $this->status !== AcademicYearStatus::Draft;
     }
 }

@@ -5,6 +5,8 @@ use App\Core\Organization\Company;
 use App\Core\Organization\Institute;
 use App\Domains\Academics\Models\AcademicNomenclatureSetting;
 use App\Domains\Academics\Models\AcademicYear;
+use App\Domains\Academics\Models\AcademicYearLock;
+use App\Domains\Academics\Models\AcademicYearScopeAssignment;
 use App\Domains\Academics\Models\EducationAuthority;
 use App\Domains\Academics\Models\EducationLevel;
 use App\Domains\Academics\Models\InstituteAuthorityAffiliation;
@@ -18,6 +20,8 @@ return [
         EducationLevel::class,
         EducationAuthority::class,
         AcademicYear::class,
+        AcademicYearScopeAssignment::class,
+        AcademicYearLock::class,
         InstituteAuthorityAffiliation::class,
     ],
 

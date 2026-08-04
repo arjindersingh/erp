@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Core\Tenancy\Tenant;
 use App\Domains\Academics\Enums\AcademicEntityKey;
 use App\Domains\Academics\Models\AcademicNomenclatureSetting;
+use App\Domains\Academics\Models\AcademicYear;
 use App\Domains\Academics\Models\EducationAuthority;
 use App\Domains\Academics\Models\EducationLevel;
 use Illuminate\Database\Seeder;
@@ -35,6 +36,10 @@ final class AcademicFoundationSeeder extends Seeder
         }
 
         foreach (Tenant::query()->get() as $tenant) {
+            AcademicYear::withoutGlobalScopes()->updateOrCreate(
+                ['tenant_id' => $tenant->id, 'company_id' => null, 'campus_id' => null, 'institute_id' => null, 'code' => '2026-2027'],
+                ['name' => '2026–27', 'starts_on' => '2026-04-01', 'ends_on' => '2027-03-31', 'is_current' => true, 'is_default' => true, 'status' => 'active'],
+            );
             foreach (AcademicEntityKey::cases() as $entity) {
                 $singular = str($entity->value)->headline()->toString();
                 AcademicNomenclatureSetting::withoutGlobalScopes()->updateOrCreate(

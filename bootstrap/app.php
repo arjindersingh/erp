@@ -1,6 +1,8 @@
 <?php
 
 use App\Core\Tenancy\Exceptions\TenantCouldNotBeResolved;
+use App\Http\Middleware\EnsureAcademicYearContext;
+use App\Http\Middleware\EnsureAcademicYearWritable;
 use App\Http\Middleware\EnsureTenantIsActive;
 use App\Http\Middleware\ResolvePublicTenant;
 use Illuminate\Foundation\Application;
@@ -16,6 +18,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'academic-year' => EnsureAcademicYearContext::class,
+            'academic-year.writable' => EnsureAcademicYearWritable::class,
+        ]);
         $middleware->redirectGuestsTo(fn (): string => route('home'));
 
         $middleware->appendToGroup('web', [
