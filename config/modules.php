@@ -1,5 +1,7 @@
 <?php
 
+use Modules\Core\Providers\CoreServiceProvider;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -17,7 +19,7 @@ return [
     'modules' => [
         'core' => [
             'name' => 'Core',
-            'provider' => Modules\Core\Providers\CoreServiceProvider::class,
+            'provider' => CoreServiceProvider::class,
         ],
     ],
 ];
