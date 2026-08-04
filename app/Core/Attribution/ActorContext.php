@@ -53,6 +53,11 @@ final readonly class ActorContext
         public array $context = [],
     ) {}
 
+    public function toArray(): array
+    {
+        return $this->toAuditAttributes();
+    }
+
     public function toAuditAttributes(): array
     {
         return [
