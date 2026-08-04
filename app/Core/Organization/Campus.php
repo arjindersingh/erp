@@ -3,7 +3,7 @@
 namespace App\Core\Organization;
 
 use App\Core\Authorization\AccessScope;
-use App\Core\Tenancy\Tenant;
+use App\Shared\Support\BelongsToTenant;
 use Database\Factories\CampusFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
@@ -34,7 +34,7 @@ use Illuminate\Support\Str;
 class Campus extends Model
 {
     /** @use HasFactory<CampusFactory> */
-    use HasFactory, SoftDeletes;
+    use BelongsToTenant, HasFactory, SoftDeletes;
 
     protected function casts(): array
     {
@@ -46,11 +46,6 @@ class Campus extends Model
     protected function slug(): Attribute
     {
         return Attribute::set(fn (?string $value, array $attributes) => $value ?: Str::slug($attributes['name'] ?? ''));
-    }
-
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
     }
 
     public function company(): BelongsTo

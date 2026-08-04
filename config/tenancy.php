@@ -1,6 +1,16 @@
 <?php
 
+use App\Core\Organization\Campus;
+use App\Core\Organization\Company;
+use App\Core\Organization\Institute;
+
 return [
+    'owned_models' => [
+        Company::class,
+        Campus::class,
+        Institute::class,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Public Tenant Resolution

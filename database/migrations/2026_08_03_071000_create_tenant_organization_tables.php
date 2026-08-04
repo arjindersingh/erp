@@ -64,6 +64,8 @@ return new class extends Migration
             $table->unique(['company_id', 'code']);
             $table->index(['tenant_id', 'company_id']);
             $table->unique(['tenant_id', 'company_id', 'id']);
+            $table->foreign(['tenant_id', 'company_id'], 'campuses_company_tenant_fk')
+                ->references(['tenant_id', 'id'])->on('companies')->cascadeOnDelete();
         });
 
         Schema::create('institute_types', function (Blueprint $table) {
@@ -99,6 +101,10 @@ return new class extends Migration
             $table->unique(['campus_id', 'code']);
             $table->index(['tenant_id', 'company_id', 'campus_id']);
             $table->unique(['tenant_id', 'company_id', 'campus_id', 'id']);
+            $table->foreign(['tenant_id', 'company_id'], 'institutes_company_tenant_fk')
+                ->references(['tenant_id', 'id'])->on('companies')->cascadeOnDelete();
+            $table->foreign(['tenant_id', 'company_id', 'campus_id'], 'institutes_campus_tenant_fk')
+                ->references(['tenant_id', 'company_id', 'id'])->on('campuses')->cascadeOnDelete();
         });
 
         Schema::create('tenant_domains', function (Blueprint $table) {

@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace App\Shared\Support;
 
 use App\Core\Tenancy\Tenant;
+use App\Core\Tenancy\TenantScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait BelongsToTenant
 {
+    public static function bootBelongsToTenant(): void
+    {
+        static::addGlobalScope(new TenantScope);
+    }
+
     /** @return BelongsTo<Tenant, $this> */
     public function tenant(): BelongsTo
     {
