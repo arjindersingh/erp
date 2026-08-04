@@ -9,6 +9,7 @@ use App\Domains\Academics\Models\AcademicYearLock;
 use App\Domains\Academics\Models\AcademicYearScopeAssignment;
 use App\Domains\Academics\Models\InstituteAuthorityAffiliation;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Schema;
 
 final class AcademicStructureAuditCommand extends Command
 {
@@ -19,6 +20,22 @@ final class AcademicStructureAuditCommand extends Command
     public function handle(): int
     {
         $failures = 0;
+        $requiredTables = [
+            'academic_programmes', 'programme_offerings', 'academic_courses',
+            'programme_course_offerings', 'academic_classes', 'academic_sections',
+            'academic_subjects', 'subject_groups', 'academic_terms', 'semesters',
+            'semester_offerings', 'class_subject_mappings', 'programme_subject_mappings',
+            'subject_offerings', 'academic_calendars', 'academic_structure_versions',
+        ];
+
+        foreach ($requiredTables as $table) {
+            if (! Schema::hasTable($table)) {
+                $this->error("FAIL  Required canonical academic table {$table} is missing");
+                $failures++;
+            } else {
+                $this->info("PASS  Required canonical academic table {$table} exists");
+            }
+        }
         foreach (AcademicYear::withoutGlobalScopes()->cursor() as $year) {
             if (! $year->starts_on->lt($year->ends_on)) {
                 $this->error("FAIL  Academic year {$year->code} has an invalid date range");
