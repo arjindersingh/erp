@@ -18,6 +18,7 @@ final class FrontendAccessAuditCommand extends Command
         $failures = 0;
         $requirements = [
             'admissions.staff.dashboard' => ['auth', 'active-context', 'module-enabled:admissions', 'effective-permission:admissions.dashboard.view'],
+            'admin.dashboard' => ['auth', 'active-context'],
             'admin.access-diagnostics' => ['auth', 'active-context', 'effective-permission:access.diagnostics.use'],
         ];
         foreach ($requirements as $name => $required) {
