@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CorePermissionSeeder::class,
             AcademicFoundationSeeder::class,
             WorkforceFoundationSeeder::class,
+            StudentGuardianFoundationSeeder::class,
             SystemRoleSeeder::class,
             NavigationFoundationSeeder::class,
             AuditFoundationSeeder::class,

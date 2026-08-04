@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Identity;
 
+use App\Domains\Students\Models\GuardianProfile as CanonicalGuardianProfile;
+use App\Domains\Students\Models\StudentProfile as CanonicalStudentProfile;
 use App\Models\User;
 use App\Shared\Support\BelongsToTenant;
 use App\Shared\Support\HasPublicUuid;
@@ -139,5 +141,17 @@ class Person extends Model
     public function managementProfile(): HasOne
     {
         return $this->hasOne(Profile::class)->where('type', ProfileType::Management->value);
+    }
+
+    /** @return HasOne<CanonicalStudentProfile, $this> */
+    public function canonicalStudentProfile(): HasOne
+    {
+        return $this->hasOne(CanonicalStudentProfile::class);
+    }
+
+    /** @return HasOne<CanonicalGuardianProfile, $this> */
+    public function canonicalGuardianProfile(): HasOne
+    {
+        return $this->hasOne(CanonicalGuardianProfile::class);
     }
 }
