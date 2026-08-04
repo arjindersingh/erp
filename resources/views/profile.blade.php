@@ -15,7 +15,10 @@
                 <h1 class="mt-2 text-3xl font-bold">{{ auth()->user()->name }}</h1>
                 <p class="mt-2 text-sm text-slate-600">The profile view resolves the currently authenticated person and any linked employee, student, or guardian profile.</p>
             </div>
-            <a href="{{ route('logout') }}" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Sign out</a>
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="{{ route('profile.interface-settings') }}" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Interface settings</a>
+                <a href="{{ route('logout') }}" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Sign out</a>
+            </div>
         </div>
 
         <div class="mt-8 grid gap-5 md:grid-cols-2">

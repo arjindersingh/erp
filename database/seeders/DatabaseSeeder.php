@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             SystemRoleSeeder::class,
             NavigationFoundationSeeder::class,
             AuditFoundationSeeder::class,
+            SettingFoundationSeeder::class,
         ]);
 
         // User::factory(10)->create();

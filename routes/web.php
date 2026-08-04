@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ContextSelectionController;
 use App\Http\Controllers\PortalShellController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProfileInterfaceSettingsController;
 use App\Http\Controllers\SystemHealthController;
 use App\Http\Livewire\Public\HomePage;
 use App\Http\Middleware\ResolvePublicTenant;
@@ -29,6 +30,8 @@ Route::middleware('auth')->group(function (): void {
     Route::get('/context/select', [ContextSelectionController::class, 'create'])->name('context.select');
     Route::post('/context/select', [ContextSelectionController::class, 'store'])->name('context.store');
     Route::get('/profile', ProfileController::class)->name('profile');
+    Route::get('/profile/interface-settings', ProfileInterfaceSettingsController::class)
+        ->middleware(['active-context'])->name('profile.interface-settings');
     Route::get('/admin', AdminDashboardController::class)->middleware(['active-context'])->name('admin.dashboard');
     Route::get('/admin/access-diagnostics', AccessDiagnosticsController::class)
         ->middleware(['active-context', 'effective-permission:access.diagnostics.use'])->name('admin.access-diagnostics');
