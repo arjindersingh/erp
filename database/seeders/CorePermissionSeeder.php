@@ -48,6 +48,13 @@ class CorePermissionSeeder extends Seeder
                 'academics.class_subjects.manage', 'academics.programme_subjects.manage',
                 'academics.subject_offerings.manage',
             ],
+            'admissions' => [
+                'admissions.access', 'admissions.dashboard.view', 'admissions.applications.view',
+                'admissions.manual_applications.create', 'admissions.documents.verify',
+                'admissions.eligibility.evaluate', 'admissions.merit.generate', 'admissions.merit.approve',
+                'admissions.selection.generate', 'admissions.selection.approve', 'admissions.conversion.execute',
+                'admissions.reports.view',
+            ],
             'transport' => [
                 'transport.access', 'transport.dashboard.view',
                 'transport.vehicles.view', 'transport.vehicles.create', 'transport.vehicles.update', 'transport.vehicles.retire',

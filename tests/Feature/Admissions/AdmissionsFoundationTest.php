@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Admissions;
 
+use App\Core\Modules\Module;
+use App\Core\Modules\TenantModule;
 use App\Core\Organization\Campus;
 use App\Core\Organization\Company;
 use App\Core\Organization\Institute;
@@ -90,6 +92,8 @@ final class AdmissionsFoundationTest extends TestCase
     {
         $tenant = Tenant::factory()->create();
         $tenantDomain = TenantDomain::factory()->create(['tenant_id' => $tenant->id, 'domain' => $domain]);
+        $module = Module::query()->firstOrCreate(['code' => 'admissions'], ['name' => 'Admissions', 'status' => 'active']);
+        TenantModule::withoutGlobalScopes()->create(['tenant_id' => $tenant->id, 'module_id' => $module->id, 'is_enabled' => true, 'enabled_at' => now()]);
 
         return [$tenant, $tenantDomain];
     }

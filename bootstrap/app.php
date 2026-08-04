@@ -3,8 +3,11 @@
 use App\Core\Tenancy\Exceptions\TenantCouldNotBeResolved;
 use App\Http\Middleware\EnsureAcademicYearContext;
 use App\Http\Middleware\EnsureAcademicYearWritable;
+use App\Http\Middleware\EnsureModuleEnabled;
 use App\Http\Middleware\EnsureTenantIsActive;
+use App\Http\Middleware\RequireEffectivePermission;
 use App\Http\Middleware\ResolvePublicTenant;
+use App\Http\Middleware\RestoreActiveContext;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -21,6 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'academic-year' => EnsureAcademicYearContext::class,
             'academic-year.writable' => EnsureAcademicYearWritable::class,
+            'active-context' => RestoreActiveContext::class,
+            'effective-permission' => RequireEffectivePermission::class,
+            'module-enabled' => EnsureModuleEnabled::class,
         ]);
         $middleware->redirectGuestsTo(fn (): string => route('home'));
 
