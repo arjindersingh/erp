@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Core\Tenancy\TenantScope;
+use App\Domains\Academics\Scopes\SharedOrTenantScope;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
@@ -38,7 +39,7 @@ final class DataOwnershipAuditCommand extends Command
 
             $scopes = $model->getGlobalScopes();
             $failures += $this->check(
-                collect($scopes)->contains(fn (object $scope): bool => $scope instanceof TenantScope),
+                collect($scopes)->contains(fn (object $scope): bool => $scope instanceof TenantScope || $scope instanceof SharedOrTenantScope),
                 "$modelClass uses TenantScope",
                 "$modelClass is missing TenantScope",
             );

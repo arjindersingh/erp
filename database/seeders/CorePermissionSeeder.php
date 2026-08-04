@@ -34,6 +34,16 @@ class CorePermissionSeeder extends Seeder
                 'audit.alerts.acknowledge', 'audit.integrity.view', 'audit.integrity.verify',
                 'audit.archives.view', 'audit.archives.restore', 'audit.impersonation.view',
             ],
+            'academics' => [
+                'academics.access', 'academics.dashboard.view',
+                'academics.years.view', 'academics.years.create', 'academics.years.update', 'academics.years.activate',
+                'academics.years.lock', 'academics.years.unlock', 'academics.years.close', 'academics.years.archive', 'academics.years.clone',
+                'academics.levels.view', 'academics.levels.create', 'academics.levels.update', 'academics.levels.archive',
+                'academics.authorities.view', 'academics.authorities.create', 'academics.authorities.update',
+                'academics.affiliations.view', 'academics.affiliations.create', 'academics.affiliations.verify', 'academics.affiliations.approve',
+                'academics.structure.view', 'academics.structure.manage', 'academics.structure.clone', 'academics.structure.validate',
+                'academics.structure.publish', 'academics.structure.lock', 'academics.structure.unlock',
+            ],
             'transport' => [
                 'transport.access', 'transport.dashboard.view',
                 'transport.vehicles.view', 'transport.vehicles.create', 'transport.vehicles.update', 'transport.vehicles.retire',

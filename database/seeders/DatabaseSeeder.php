@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             TenantFoundationSeeder::class,
             CoreModuleSeeder::class,
             CorePermissionSeeder::class,
+            AcademicFoundationSeeder::class,
             SystemRoleSeeder::class,
             NavigationFoundationSeeder::class,
             AuditFoundationSeeder::class,

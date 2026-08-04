@@ -3,12 +3,22 @@
 use App\Core\Organization\Campus;
 use App\Core\Organization\Company;
 use App\Core\Organization\Institute;
+use App\Domains\Academics\Models\AcademicNomenclatureSetting;
+use App\Domains\Academics\Models\AcademicYear;
+use App\Domains\Academics\Models\EducationAuthority;
+use App\Domains\Academics\Models\EducationLevel;
+use App\Domains\Academics\Models\InstituteAuthorityAffiliation;
 
 return [
     'owned_models' => [
         Company::class,
         Campus::class,
         Institute::class,
+        AcademicNomenclatureSetting::class,
+        EducationLevel::class,
+        EducationAuthority::class,
+        AcademicYear::class,
+        InstituteAuthorityAffiliation::class,
     ],
 
     /*
