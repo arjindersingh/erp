@@ -64,4 +64,27 @@ Compatible duties in the same tenant and institute may be resolved together. Dut
 - History loss: used records are restricted/soft-deleted and assignment changes append effective-dated history.
 - Circular leadership references: `primary_employment_assignment_id` and department head references are intentionally nullable; application validation owns them after assignment creation.
 
-Milestone one implements the masters, employee profile, official assignments, models, factories, seed data, integrity validation, and foundational tests. Teaching, responsibilities, UI, workflow, authorization sources, expiry, audit command, and integrations remain later milestones by design.
+Milestone one implements the masters, employee profile, official assignments, models, factories, seed data, integrity validation, foundational tests, and an audit command that expands as later tables arrive. Teaching, responsibilities, UI, workflow, authorization sources, expiry processing, and operational integrations remain later milestones by design.
+
+## School and college teaching flows
+
+The next milestone will connect both delivery models through one mandatory `subject_offering_id`:
+
+```text
+School: Employee → Posting → Academic Year → Class → Section → Subject Offering
+College: Employee → Posting → Academic Year → Programme Offering → Course → Semester Offering → Batch → Subject Offering
+```
+
+No free-text academic labels or module-specific teacher maps are permitted. Academic coordination remains a separate dated source for class, section, programme, semester, subject, or department leadership.
+
+## Milestone-one operations
+
+```bash
+php artisan migrate
+php artisan db:seed --class=WorkforceFoundationSeeder
+php artisan test --group=workforce
+php artisan erp:employee-teaching-assignment-audit
+composer analyse
+```
+
+The integrity command audits the installed employee/posting tables now and reports uninstalled teacher, teaching, and coordination tables as milestone warnings. Those checks become active automatically when their tables exist.

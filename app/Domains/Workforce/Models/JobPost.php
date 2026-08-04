@@ -48,8 +48,18 @@ final class JobPost extends WorkforceModel
         return $this->belongsTo(JobCategory::class);
     }
 
+    public function defaultEmploymentType(): BelongsTo
+    {
+        return $this->belongsTo(EmploymentType::class, 'default_employment_type_id');
+    }
+
     public function assignments(): HasMany
     {
         return $this->hasMany(EmploymentAssignment::class);
+    }
+
+    protected function casts(): array
+    {
+        return ['is_teaching_post' => 'boolean'];
     }
 }

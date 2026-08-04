@@ -27,6 +27,6 @@ final class Designation extends WorkforceModel
 
     protected function casts(): array
     {
-        return ['is_teaching_designation' => 'boolean', 'is_management_designation' => 'boolean'];
+        return ['is_teaching_designation' => 'boolean', 'is_management_designation' => 'boolean', 'is_academic_leadership_designation' => 'boolean'];
     }
 }

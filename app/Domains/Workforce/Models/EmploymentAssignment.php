@@ -10,10 +10,12 @@ use App\Core\Organization\Company;
 use App\Core\Organization\Institute;
 use App\Domains\Workforce\Services\EmploymentAssignmentValidator;
 use Database\Factories\EmploymentAssignmentFactory;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 #[UseFactory(EmploymentAssignmentFactory::class)]
 final class EmploymentAssignment extends WorkforceModel
@@ -100,8 +102,23 @@ final class EmploymentAssignment extends WorkforceModel
         return $this->hasMany(EmploymentAssignmentHistory::class);
     }
 
+    public function isEffectiveOn(DateTimeInterface $date): bool
+    {
+        $day = Carbon::instance($date)->startOfDay();
+        $startsOn = $this->getAttribute('starts_on');
+        $endsOn = $this->getAttribute('ends_on');
+
+        if (! $startsOn instanceof Carbon || ($endsOn !== null && ! $endsOn instanceof Carbon)) {
+            return false;
+        }
+
+        return $this->status === 'active'
+            && $startsOn->startOfDay()->lte($day)
+            && ($endsOn === null || $endsOn->endOfDay()->gte($day));
+    }
+
     protected function casts(): array
     {
-        return ['appointment_date' => 'date', 'starts_on' => 'date', 'ends_on' => 'date', 'probation_ends_on' => 'date', 'approved_at' => 'datetime', 'is_primary' => 'boolean', 'is_additional_posting' => 'boolean', 'workload_percentage' => 'decimal:2'];
+        return ['appointment_date' => 'date', 'starts_on' => 'date', 'ends_on' => 'date', 'probation_ends_on' => 'date', 'approved_at' => 'datetime', 'is_primary' => 'boolean', 'is_additional_posting' => 'boolean', 'is_acting_assignment' => 'boolean', 'workload_percentage' => 'decimal:2'];
     }
 }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domains\Workforce\Services;
 
+use App\Core\Authorization\AccessScope;
+use App\Core\Organization\Institute;
+use App\Domains\Workforce\Models\Department;
 use App\Domains\Workforce\Models\EmployeeProfile;
 use App\Domains\Workforce\Models\EmploymentAssignment;
 use App\Domains\Workforce\Models\EmploymentStatus;
@@ -27,6 +30,25 @@ final class EmploymentAssignmentValidator
         }
         if ($assignment->ends_on && $assignment->starts_on && $assignment->ends_on < $assignment->starts_on) {
             $errors['ends_on'] = 'End date must be on or after start date.';
+        }
+        $institute = Institute::withoutGlobalScopes()->find($assignment->institute_id);
+        if (! $institute || (int) $institute->tenant_id !== (int) $assignment->tenant_id
+            || (int) $institute->company_id !== (int) $assignment->company_id
+            || (int) $institute->campus_id !== (int) $assignment->campus_id) {
+            $errors['institute_id'] = 'Institute must belong to the assignment tenant, company, and campus.';
+        }
+        if ($assignment->department_id) {
+            $department = Department::withoutGlobalScopes()->find($assignment->department_id);
+            if (! $department || (int) $department->tenant_id !== (int) $assignment->tenant_id
+                || ($department->company_id && (int) $department->company_id !== (int) $assignment->company_id)
+                || ($department->campus_id && (int) $department->campus_id !== (int) $assignment->campus_id)
+                || ($department->institute_id && (int) $department->institute_id !== (int) $assignment->institute_id)) {
+                $errors['department_id'] = 'Department is outside the assignment organisational boundary.';
+            }
+        }
+        $scope = AccessScope::withoutGlobalScopes()->find($assignment->access_scope_id);
+        if (! $scope || (int) $scope->tenant_id !== (int) $assignment->tenant_id) {
+            $errors['access_scope_id'] = 'Access scope must belong to the assignment tenant.';
         }
         if ($assignment->job_post_id) {
             $post = JobPost::withoutGlobalScopes()->find($assignment->job_post_id);

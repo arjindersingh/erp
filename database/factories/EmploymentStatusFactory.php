@@ -12,11 +12,11 @@ final class EmploymentStatusFactory extends Factory
 {
     public function definition(): array
     {
-        return ['tenant_id' => null, 'code' => strtoupper(fake()->unique()->bothify('ES-###')), 'name' => fake()->word(), 'is_active_status' => true, 'is_terminal_status' => false, 'is_system' => true, 'status' => 'active'];
+        return ['tenant_id' => null, 'code' => strtoupper(fake()->unique()->bothify('ES-###')), 'name' => fake()->word(), 'is_active_status' => true, 'is_terminal_status' => false, 'allows_teaching_assignment' => true, 'allows_system_access' => true, 'is_system' => true, 'status' => 'active'];
     }
 
     public function inactive(): static
     {
-        return $this->state(['is_active_status' => false, 'is_terminal_status' => true]);
+        return $this->state(['is_active_status' => false, 'is_terminal_status' => true, 'allows_teaching_assignment' => false, 'allows_system_access' => false]);
     }
 }

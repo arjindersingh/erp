@@ -7,6 +7,7 @@ namespace Tests\Feature\Workforce;
 use App\Core\Identity\Person;
 use App\Core\Tenancy\Tenant;
 use App\Core\Tenancy\TenantContext;
+use App\Domains\Workforce\Models\Department;
 use App\Domains\Workforce\Models\EmployeeProfile;
 use App\Domains\Workforce\Models\EmploymentAssignment;
 use App\Domains\Workforce\Models\EmploymentStatus;
@@ -69,6 +70,34 @@ final class WorkforceEmploymentFoundationTest extends TestCase
     {
         $assignment = EmploymentAssignment::factory()->create();
         $this->assertDatabaseHas('employment_assignment_histories', ['tenant_id' => $assignment->tenant_id, 'employment_assignment_id' => $assignment->id, 'action' => 'appointment']);
+    }
+
+    public function test_cross_boundary_parent_department_is_rejected(): void
+    {
+        $parent = Department::factory()->create();
+        $child = Department::factory()->make(['parent_id' => $parent->id]);
+
+        $this->expectException(ValidationException::class);
+        $child->save();
+    }
+
+    public function test_cross_institute_department_assignment_is_rejected(): void
+    {
+        $assignment = EmploymentAssignment::factory()->make();
+        $assignment->department_id = Department::factory()->create()->id;
+
+        $this->expectException(ValidationException::class);
+        $assignment->save();
+    }
+
+    public function test_foundation_integrity_audit_passes(): void
+    {
+        EmploymentAssignment::factory()->create();
+
+        $this->artisan('erp:employee-teaching-assignment-audit')
+            ->expectsOutputToContain('PASS')
+            ->expectsOutputToContain('WARNING')
+            ->assertSuccessful();
     }
 
     public function test_tenant_scope_hides_other_tenants_employee_profiles(): void

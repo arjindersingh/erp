@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Domains\Workforce\Models;
 
 use App\Domains\Academics\Scopes\SharedOrTenantScope;
-use Database\Factories\EmploymentStatusFactory;
+use Database\Factories\DepartmentTypeFactory;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[UseFactory(EmploymentStatusFactory::class)]
-final class EmploymentStatus extends WorkforceModel
+#[UseFactory(DepartmentTypeFactory::class)]
+final class DepartmentType extends WorkforceModel
 {
     use HasFactory;
 
@@ -19,8 +20,13 @@ final class EmploymentStatus extends WorkforceModel
         self::addGlobalScope(new SharedOrTenantScope);
     }
 
+    public function departments(): HasMany
+    {
+        return $this->hasMany(Department::class);
+    }
+
     protected function casts(): array
     {
-        return ['is_active_status' => 'boolean', 'is_terminal_status' => 'boolean', 'allows_teaching_assignment' => 'boolean', 'allows_system_access' => 'boolean', 'is_system' => 'boolean'];
+        return ['is_academic' => 'boolean', 'is_system' => 'boolean'];
     }
 }

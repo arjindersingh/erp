@@ -144,7 +144,7 @@ class AuditFoundationTest extends TestCase
         $this->seed(AuditFoundationSeeder::class);
         $this->seed(AuditFoundationSeeder::class);
         $definition = AuditEventDefinition::query()->where('event_code', 'fees.receipt.cancelled')->firstOrFail();
-        $this->assertSame(11, AuditEventDefinition::query()->count());
+        $this->assertSame(15, AuditEventDefinition::query()->count());
 
         $this->expectException(LogicException::class);
         $definition->delete();
