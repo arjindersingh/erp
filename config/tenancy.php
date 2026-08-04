@@ -3,13 +3,29 @@
 use App\Core\Organization\Campus;
 use App\Core\Organization\Company;
 use App\Core\Organization\Institute;
+use App\Domains\Academics\Models\AcademicCalendar;
+use App\Domains\Academics\Models\AcademicClass;
+use App\Domains\Academics\Models\AcademicCourse;
 use App\Domains\Academics\Models\AcademicNomenclatureSetting;
+use App\Domains\Academics\Models\AcademicProgramme;
+use App\Domains\Academics\Models\AcademicSection;
+use App\Domains\Academics\Models\AcademicStructureVersion;
+use App\Domains\Academics\Models\AcademicSubject;
+use App\Domains\Academics\Models\AcademicTerm;
 use App\Domains\Academics\Models\AcademicYear;
 use App\Domains\Academics\Models\AcademicYearLock;
 use App\Domains\Academics\Models\AcademicYearScopeAssignment;
+use App\Domains\Academics\Models\ClassSubjectMapping;
 use App\Domains\Academics\Models\EducationAuthority;
 use App\Domains\Academics\Models\EducationLevel;
 use App\Domains\Academics\Models\InstituteAuthorityAffiliation;
+use App\Domains\Academics\Models\ProgrammeCourseOffering;
+use App\Domains\Academics\Models\ProgrammeOffering;
+use App\Domains\Academics\Models\ProgrammeSubjectMapping;
+use App\Domains\Academics\Models\Semester;
+use App\Domains\Academics\Models\SemesterOffering;
+use App\Domains\Academics\Models\SubjectGroup;
+use App\Domains\Academics\Models\SubjectOffering;
 
 return [
     'owned_models' => [
@@ -23,6 +39,11 @@ return [
         AcademicYearScopeAssignment::class,
         AcademicYearLock::class,
         InstituteAuthorityAffiliation::class,
+        AcademicProgramme::class, AcademicCourse::class, ProgrammeOffering::class,
+        ProgrammeCourseOffering::class, AcademicClass::class, AcademicSection::class,
+        AcademicSubject::class, SubjectGroup::class, AcademicTerm::class, Semester::class,
+        SemesterOffering::class, AcademicStructureVersion::class, ClassSubjectMapping::class,
+        ProgrammeSubjectMapping::class, SubjectOffering::class, AcademicCalendar::class,
     ],
 
     /*

@@ -16,8 +16,10 @@ use Database\Seeders\SystemRoleSeeder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use LogicException;
+use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
 
+#[Group('authorization')]
 class DynamicAccessFoundationTest extends TestCase
 {
     use RefreshDatabase;

@@ -43,6 +43,10 @@ class CorePermissionSeeder extends Seeder
                 'academics.affiliations.view', 'academics.affiliations.create', 'academics.affiliations.verify', 'academics.affiliations.approve',
                 'academics.structure.view', 'academics.structure.manage', 'academics.structure.clone', 'academics.structure.validate',
                 'academics.structure.publish', 'academics.structure.lock', 'academics.structure.unlock',
+                'academics.programmes.view', 'academics.programmes.manage', 'academics.classes.view',
+                'academics.classes.manage', 'academics.sections.manage', 'academics.subjects.manage',
+                'academics.class_subjects.manage', 'academics.programme_subjects.manage',
+                'academics.subject_offerings.manage',
             ],
             'transport' => [
                 'transport.access', 'transport.dashboard.view',

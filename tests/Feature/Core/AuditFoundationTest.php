@@ -19,8 +19,10 @@ use App\Models\User;
 use Database\Seeders\AuditFoundationSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use LogicException;
+use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
 
+#[Group('audit')]
 class AuditFoundationTest extends TestCase
 {
     use RefreshDatabase;

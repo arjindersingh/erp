@@ -19,8 +19,10 @@ use Database\Seeders\NavigationFoundationSeeder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use LogicException;
+use PHPUnit\Framework\Attributes\Group;
 use Tests\TestCase;
 
+#[Group('navigation')]
 class NavigationFoundationTest extends TestCase
 {
     use RefreshDatabase;
@@ -117,5 +119,16 @@ class NavigationFoundationTest extends TestCase
         $this->assertFalse($parentItems->contains('Vehicles'));
         $this->assertTrue($staffItems->contains('Vehicles'));
         $this->assertSame(9, Portal::query()->count());
+    }
+
+    public function test_navigation_audit_accepts_seeded_links(): void
+    {
+        $this->seed(CoreModuleSeeder::class);
+        $this->seed(CorePermissionSeeder::class);
+        $this->seed(NavigationFoundationSeeder::class);
+
+        $this->artisan('erp:navigation-audit')
+            ->expectsOutput('PASS  All menu routes and permissions are valid')
+            ->assertSuccessful();
     }
 }

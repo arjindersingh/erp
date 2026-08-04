@@ -10,6 +10,7 @@ use App\Core\Navigation\MenuItem;
 use App\Core\Navigation\MenuSet;
 use App\Core\Navigation\Portal;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Route;
 
 class NavigationFoundationSeeder extends Seeder
 {
@@ -62,8 +63,8 @@ class NavigationFoundationSeeder extends Seeder
             $module->features()->whereIn('code', $features)->update(['feature_group_id' => $group->id]);
         }
 
-        $module->features()->where('code', 'dashboard')->update(['feature_type' => 'dashboard', 'route_name' => 'transport.dashboard']);
-        $module->features()->where('code', 'reports')->update(['feature_type' => 'report', 'route_name' => 'transport.reports.index']);
+        $module->features()->where('code', 'dashboard')->update(['feature_type' => 'dashboard', 'route_name' => Route::has('transport.dashboard') ? 'transport.dashboard' : null]);
+        $module->features()->where('code', 'reports')->update(['feature_type' => 'report', 'route_name' => Route::has('transport.reports.index') ? 'transport.reports.index' : null]);
     }
 
     private function seedTransportMenus(): void
@@ -119,7 +120,7 @@ class NavigationFoundationSeeder extends Seeder
             foreach ($items as $position => [$title, $route, $permission]) {
                 MenuItem::query()->updateOrCreate(
                     ['menu_set_id' => $menu->id, 'parent_id' => $group->id, 'title' => $title],
-                    ['module_id' => $module->id, 'route_name' => $route, 'display_order' => $position, 'permission_code' => $permission, 'item_type' => 'link', 'is_system' => true, 'status' => 'active'],
+                    ['module_id' => $module->id, 'route_name' => Route::has($route) ? $route : null, 'display_order' => $position, 'permission_code' => $permission, 'item_type' => 'link', 'is_system' => true, 'status' => Route::has($route) ? 'active' : 'inactive'],
                 );
             }
         }

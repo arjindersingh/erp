@@ -23,6 +23,10 @@ class AuditFoundationSeeder extends Seeder
             'audit.export.requested' => ['export', 'export_requested', 'high', 'Audit export requested', true, true],
             'security.impersonation.started' => ['impersonation', 'created', 'critical', 'Site administrator impersonation started', true, true],
             'security.cross_tenant.denied' => ['security', 'permission_denied', 'high', 'Cross-tenant access denied', true, true],
+            'academic.structure.cloned' => ['academic', 'cloned', 'notice', 'Academic structure cloned', true, false],
+            'academic.structure.published' => ['academic', 'published', 'high', 'Academic structure published', true, false],
+            'academic.year.locked' => ['academic', 'locked', 'high', 'Academic year locked', true, false],
+            'academic.year.unlocked' => ['academic', 'unlocked', 'high', 'Academic year unlocked', true, true],
         ];
 
         foreach ($definitions as $eventCode => [$category, $action, $severity, $title, $security, $sensitive]) {

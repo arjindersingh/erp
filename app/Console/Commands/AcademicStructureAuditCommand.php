@@ -9,6 +9,7 @@ use App\Domains\Academics\Models\AcademicYearLock;
 use App\Domains\Academics\Models\AcademicYearScopeAssignment;
 use App\Domains\Academics\Models\InstituteAuthorityAffiliation;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 final class AcademicStructureAuditCommand extends Command
@@ -34,6 +35,32 @@ final class AcademicStructureAuditCommand extends Command
                 $failures++;
             } else {
                 $this->info("PASS  Required canonical academic table {$table} exists");
+            }
+        }
+        foreach ([
+            'academic_classes' => ['tenant_id', 'institute_id', 'academic_year_id', 'code'],
+            'academic_sections' => ['tenant_id', 'institute_id', 'academic_year_id', 'type', 'code'],
+            'academic_programmes' => ['tenant_id', 'institute_id', 'code'],
+            'subject_offerings' => ['tenant_id', 'delivery_key'],
+        ] as $table => $columns) {
+            if (! Schema::hasTable($table)) {
+                continue;
+            }
+            $duplicates = DB::table($table)->select($columns)->selectRaw('COUNT(*) AS aggregate')->whereNull('deleted_at')->groupBy($columns)->havingRaw('COUNT(*) > 1')->count();
+            if ($duplicates > 0) {
+                $this->error("FAIL  {$table} contains {$duplicates} duplicate active academic boundaries");
+                $failures++;
+            } else {
+                $this->info("PASS  {$table} has no duplicate active boundaries");
+            }
+        }
+        if (Schema::hasTable('subject_offerings')) {
+            $orphans = DB::table('subject_offerings')->whereNull('deleted_at')->whereNull('class_subject_mapping_id')->whereNull('programme_subject_mapping_id')->count();
+            if ($orphans > 0) {
+                $this->error("FAIL  {$orphans} orphaned subject offerings detected");
+                $failures++;
+            } else {
+                $this->info('PASS  No orphaned subject offerings detected');
             }
         }
         foreach (AcademicYear::withoutGlobalScopes()->cursor() as $year) {
