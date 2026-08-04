@@ -18,6 +18,7 @@ class CoreModuleSeeder extends Seeder
             'access' => ['Users and Access', true, ['users', 'roles', 'permissions', 'overrides', 'audit']],
             'audit' => ['Audit and Security', true, ['logs', 'security', 'retention', 'legal_holds', 'alerts', 'integrity', 'archives', 'impersonation']],
             'academics' => ['Academic Foundation', true, ['dashboard', 'years', 'levels', 'authorities', 'affiliations', 'nomenclature', 'structure']],
+            'admissions' => ['Admissions', false, ['campaigns', 'applications', 'manual_entry', 'scrutiny', 'assessments', 'merit', 'seats', 'selection', 'offers', 'conversion', 'reports']],
             'transport' => ['Transport', false, ['dashboard', 'vehicles', 'drivers', 'routes', 'stops', 'students', 'tracking', 'complaints', 'reports', 'child', 'own']],
         ];
 

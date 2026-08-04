@@ -1,5 +1,6 @@
 <?php
 
+use Modules\Admissions\Providers\AdmissionsServiceProvider;
 use Modules\Core\Providers\CoreServiceProvider;
 
 return [
@@ -14,12 +15,17 @@ return [
     */
     'enabled' => [
         'core',
+        'admissions',
     ],
 
     'modules' => [
         'core' => [
             'name' => 'Core',
             'provider' => CoreServiceProvider::class,
+        ],
+        'admissions' => [
+            'name' => 'Admissions',
+            'provider' => AdmissionsServiceProvider::class,
         ],
     ],
 ];
