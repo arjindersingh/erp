@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Core\Authentication\ActiveContext;
 use App\Core\Authentication\AuthenticatedProfileResolver;
+use App\Core\Layout\InterfaceLayoutResolver;
 use App\Core\Tenancy\TenantContext;
 use App\Domains\Admissions\Models\AdmissionCampaign;
 use Illuminate\Http\Request;
@@ -18,7 +19,8 @@ final class AdminDashboardController
         $tenant = $tenantContext->requireTenant();
         $profiles = $resolver->resolveFor($request->user(), $tenant);
         $campaigns = AdmissionCampaign::query()->where('tenant_id', $tenant->id)->count();
+        $layout = app(InterfaceLayoutResolver::class)->resolve($request->user(), $context);
 
-        return view('admin.dashboard', compact('tenant', 'context', 'profiles', 'campaigns'));
+        return view('admin.dashboard', compact('tenant', 'context', 'profiles', 'campaigns', 'layout'));
     }
 }

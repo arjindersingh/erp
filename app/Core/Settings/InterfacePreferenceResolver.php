@@ -5,6 +5,13 @@ declare(strict_types=1);
 namespace App\Core\Settings;
 
 use App\Core\Authentication\ActiveContext;
+use App\Core\Settings\PortalInterfaceSetting;
+use App\Core\Settings\ResolvedInterfacePreferences;
+use App\Core\Settings\TenantInterfaceSetting;
+use App\Core\Settings\UiColourPalette;
+use App\Core\Settings\UiFontFamily;
+use App\Core\Settings\UiThemePreset;
+use App\Core\Settings\UserInterfacePreference;
 use App\Models\User;
 use Illuminate\Cache\Repository as CacheRepository;
 

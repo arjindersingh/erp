@@ -6,7 +6,9 @@ namespace App\Core\Settings\Enums;
 
 enum ContentWidth: string
 {
-    case Standard = 'standard';
-    case Wide = 'wide';
     case Full = 'full';
+    case Wide = 'wide';
+    case Standard = 'standard';
+    case Narrow = 'narrow';
+    case Boxed = 'boxed';
 }
