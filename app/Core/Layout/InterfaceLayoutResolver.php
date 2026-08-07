@@ -38,6 +38,7 @@ final class InterfaceLayoutResolver
     private function build(User $user, ActiveContext $context, ?Module $module): ResolvedInterfaceLayout
     {
         $base = $this->preferences->resolve($user, $context);
+        $portal = $context->portal;
 
         $userLayout = $module === null
             ? null

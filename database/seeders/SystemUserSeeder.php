@@ -68,7 +68,10 @@ final class SystemUserSeeder extends Seeder
                     'is_primary' => true,
                     'status' => MembershipStatus::Active,
                     'approved_at' => now(),
-                    'metadata' => ['portal_codes' => ['administration']],
+                    'metadata' => ['portal_codes' => [
+                        'site_admin', 'management', 'administration', 'staff',
+                        'teacher', 'student', 'parent', 'alumni',
+                    ]],
                 ],
             );
 

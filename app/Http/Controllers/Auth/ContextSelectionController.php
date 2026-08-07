@@ -20,7 +20,10 @@ final class ContextSelectionController
         $tenant = app(TenantContext::class)->requireTenant();
         $memberships = UserMembership::withoutGlobalScopes()->with('accessScope')->where('tenant_id', $tenant->id)
             ->where('user_id', $request->user()->id)->selectable()->get();
-        $portals = Portal::query()->where('status', 'active')->get();
+        $allowedPortalCodes = $memberships->flatMap(
+            fn (UserMembership $membership): array => $membership->metadata['portal_codes'] ?? ['administration'],
+        )->unique()->values();
+        $portals = Portal::query()->where('status', 'active')->whereIn('code', $allowedPortalCodes)->get();
         $years = AcademicYear::withoutGlobalScopes()->where('tenant_id', $tenant->id)->whereIn('status', ['active', 'locked'])->get();
 
         return view('context.select', compact('tenant', 'memberships', 'portals', 'years'));
@@ -33,6 +36,6 @@ final class ContextSelectionController
         $request->session()->regenerate();
         $request->session()->put('active_context', $context->sessionPayload());
 
-        return redirect()->route('admissions.staff.dashboard');
+        return redirect()->route('portal.dashboard');
     }
 }

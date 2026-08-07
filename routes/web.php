@@ -5,6 +5,8 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ContextSelectionController;
 use App\Http\Controllers\PortalShellController;
+use App\Http\Controllers\PortalDashboardController;
+use App\Http\Controllers\PlatformSetupController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileInterfaceSettingsController;
 use App\Http\Controllers\SystemHealthController;
@@ -26,10 +28,12 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('throttle:5,1')->name('login.store');
 });
 Route::middleware('auth')->group(function (): void {
+    Route::get('/setup', PlatformSetupController::class)->name('platform.setup');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::get('/context/select', [ContextSelectionController::class, 'create'])->name('context.select');
     Route::post('/context/select', [ContextSelectionController::class, 'store'])->name('context.store');
     Route::get('/profile', ProfileController::class)->name('profile');
+    Route::get('/dashboard', PortalDashboardController::class)->middleware(['active-context'])->name('portal.dashboard');
     Route::get('/profile/interface-settings', ProfileInterfaceSettingsController::class)
         ->middleware(['active-context'])->name('profile.interface-settings');
     Route::get('/admin', AdminDashboardController::class)->middleware(['active-context'])->name('admin.dashboard');

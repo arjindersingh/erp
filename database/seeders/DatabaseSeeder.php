@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
             WorkforceFoundationSeeder::class,
             StudentGuardianFoundationSeeder::class,
             SystemRoleSeeder::class,
-            SystemUserSeeder::class,
             NavigationFoundationSeeder::class,
+            SystemUserSeeder::class,
             AuditFoundationSeeder::class,
             SettingFoundationSeeder::class,
         ]);

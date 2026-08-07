@@ -31,7 +31,10 @@ final class AuthenticatedSessionController
             Auth::logout();
             throw ValidationException::withMessages(['email' => 'This account is not available.']);
         }
-        $tenant = app(TenantContext::class)->requireTenant();
+        $tenant = app(TenantContext::class)->tenant();
+        if ($tenant === null) {
+            return redirect()->route('platform.setup');
+        }
         $count = $user->memberships()->withoutGlobalScopes()->where('tenant_id', $tenant->id)->selectable()->count();
         if ($count === 0) {
             Auth::logout();

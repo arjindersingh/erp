@@ -39,7 +39,10 @@
             <div class="mt-8 flex flex-wrap gap-3">
                 <a href="{{ route('admin.access-diagnostics') }}" class="rounded-xl bg-cyan-700 px-4 py-2 font-semibold text-white">Open access diagnostics</a>
                 <a href="{{ route('profile') }}" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Profile</a>
-                <a href="{{ route('logout') }}" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Logout</a>
+                <form method="post" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Logout</button>
+                </form>
             </div>
         </div>
     </main>

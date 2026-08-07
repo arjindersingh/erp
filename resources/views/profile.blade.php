@@ -17,7 +17,10 @@
             </div>
             <div class="flex flex-wrap items-center gap-3">
                 <a href="{{ route('profile.interface-settings') }}" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Interface settings</a>
-                <a href="{{ route('logout') }}" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Sign out</a>
+                <form method="post" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Sign out</button>
+                </form>
             </div>
         </div>
 
