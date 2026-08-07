@@ -176,7 +176,7 @@ return new class extends Migration
             $table->unsignedBigInteger('record_id')->nullable();
             $table->timestamp('visited_at')->useCurrent();
             $table->timestamps();
-            $table->index(['user_id', 'tenant_id', 'portal_id', 'module_id']);
+            $table->index(['user_id', 'tenant_id', 'portal_id', 'module_id'], 'user_recent_navigation_lookup');
             $table->index(['route_name']);
         });
     }

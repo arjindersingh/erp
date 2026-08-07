@@ -208,6 +208,18 @@ return new class extends Migration
             $table->index(['tenant_id', 'communication_channel_id']);
         });
 
+        Schema::create('communication_template_groups', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('uuid')->unique();
+            $table->foreignId('tenant_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('code')->unique();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('status')->default('active')->index();
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
         Schema::create('communication_profiles', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
@@ -231,14 +243,14 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['tenant_id', 'company_id', 'campus_id', 'institute_id']);
+            $table->index(['tenant_id', 'company_id', 'campus_id', 'institute_id'], 'communication_profile_context_lookup');
         });
 
         Schema::create('communication_profile_endpoints', function (Blueprint $table) {
             $table->id();
             $table->foreignId('communication_profile_id')->constrained('communication_profiles')->cascadeOnDelete();
             $table->foreignId('communication_channel_id')->constrained('communication_channels')->cascadeOnDelete();
-            $table->foreignId('communication_endpoint_id')->constrained('communication_endpoints')->cascadeOnDelete();
+            $table->foreignId('communication_endpoint_id')->constrained('communication_endpoints', 'id', 'communication_profile_endpoint_fk')->cascadeOnDelete();
             $table->unsignedInteger('priority')->default(100);
             $table->boolean('is_primary')->default(false);
             $table->boolean('is_reply_endpoint')->default(false);
@@ -271,7 +283,7 @@ return new class extends Migration
         Schema::create('communication_template_versions', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->foreignId('communication_template_id')->constrained('communication_templates')->cascadeOnDelete();
+            $table->foreignId('communication_template_id')->constrained('communication_templates', 'id', 'communication_template_version_fk')->cascadeOnDelete();
             $table->unsignedInteger('version_number')->default(1);
             $table->string('name');
             $table->text('subject')->nullable();
@@ -297,8 +309,8 @@ return new class extends Migration
 
         Schema::create('communication_template_approvals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('communication_template_id')->constrained('communication_templates')->cascadeOnDelete();
-            $table->foreignId('communication_template_version_id')->nullable()->constrained('communication_template_versions')->nullOnDelete();
+            $table->foreignId('communication_template_id')->constrained('communication_templates', 'id', 'communication_template_approval_fk')->cascadeOnDelete();
+            $table->foreignId('communication_template_version_id')->nullable()->constrained('communication_template_versions', 'id', 'communication_template_approval_version_fk')->nullOnDelete();
             $table->foreignId('approved_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamp('approved_at')->nullable();
             $table->string('status')->default('pending')->index();
@@ -340,7 +352,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['tenant_id', 'communication_purpose_id', 'communication_channel_id', 'priority']);
+            $table->index(['tenant_id', 'communication_purpose_id', 'communication_channel_id', 'priority'], 'communication_routing_priority_lookup');
         });
 
         Schema::create('communication_authorisations', function (Blueprint $table) {
@@ -372,21 +384,26 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->index(['tenant_id', 'communication_profile_id', 'user_id']);
+            $table->index(['tenant_id', 'communication_profile_id', 'user_id'], 'communication_auth_user_lookup');
         });
 
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('communication_rate_limit_policies');
-        Schema::dropIfExists('communication_working_hours');
         Schema::dropIfExists('communication_authorisations');
         Schema::dropIfExists('communication_routing_rules');
+        Schema::dropIfExists('communication_template_approvals');
+        Schema::dropIfExists('communication_template_tokens');
+        Schema::dropIfExists('communication_template_versions');
+        Schema::dropIfExists('communication_templates');
         Schema::dropIfExists('communication_profile_endpoints');
         Schema::dropIfExists('communication_profiles');
+        Schema::dropIfExists('communication_template_groups');
         Schema::dropIfExists('communication_endpoints');
         Schema::dropIfExists('communication_providers');
+        Schema::dropIfExists('communication_rate_limit_policies');
+        Schema::dropIfExists('communication_working_hours');
         Schema::dropIfExists('communication_fallback_steps');
         Schema::dropIfExists('communication_fallback_policies');
         Schema::dropIfExists('communication_purposes');

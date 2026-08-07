@@ -135,7 +135,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tenant_id');
             $table->unsignedBigInteger('student_profile_id');
             $table->unsignedBigInteger('guardian_profile_id');
-            $table->foreignId('guardian_relationship_type_id')->constrained()->restrictOnDelete();
+            $table->foreignId('guardian_relationship_type_id')->constrained('guardian_relationship_types', 'id', 'student_guardian_relationship_type_fk')->restrictOnDelete();
             $table->boolean('is_primary_guardian')->default(false);
             $table->boolean('is_legal_guardian')->default(false);
             $table->boolean('is_financial_guardian')->default(false);

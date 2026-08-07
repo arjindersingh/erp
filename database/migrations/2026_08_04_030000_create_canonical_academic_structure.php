@@ -34,7 +34,9 @@ return new class extends Migration
             $t->foreignId('academic_programme_id')->constrained()->restrictOnDelete();
             $t->unsignedInteger('intake_capacity')->nullable();
             $t->string('code');
-            $t->unique(['tenant_id', 'institute_id', 'academic_year_id', 'academic_programme_id']);
+            // MySQL limits identifiers to 64 characters; Laravel's generated name for
+            // this composite key is 88 characters.
+            $t->unique(['tenant_id', 'institute_id', 'academic_year_id', 'academic_programme_id'], 'programme_offering_context_unique');
         });
         Schema::create('programme_course_offerings', function (Blueprint $t): void {
             $this->base($t);
@@ -50,7 +52,7 @@ return new class extends Migration
             $t->string('code');
             $t->string('name');
             $t->unsignedSmallInteger('sequence')->default(0);
-            $t->unique(['tenant_id', 'institute_id', 'academic_year_id', 'code']);
+            $t->unique(['tenant_id', 'institute_id', 'academic_year_id', 'code'], 'academic_class_context_code_unique');
         });
         Schema::create('academic_sections', function (Blueprint $t): void {
             $this->context($t);
@@ -90,7 +92,7 @@ return new class extends Migration
             $t->foreignId('subject_group_id')->constrained()->cascadeOnDelete();
             $t->foreignId('academic_subject_id')->constrained()->restrictOnDelete();
             $t->timestamps();
-            $t->unique(['subject_group_id', 'academic_subject_id']);
+            $t->unique(['subject_group_id', 'academic_subject_id'], 'subject_group_member_unique');
         });
         Schema::create('academic_terms', function (Blueprint $t): void {
             $this->context($t);
@@ -98,7 +100,7 @@ return new class extends Migration
             $t->string('name');
             $t->date('starts_on');
             $t->date('ends_on');
-            $t->unique(['tenant_id', 'institute_id', 'academic_year_id', 'code']);
+            $t->unique(['tenant_id', 'institute_id', 'academic_year_id', 'code'], 'academic_term_context_code_unique');
         });
         Schema::create('semesters', function (Blueprint $t): void {
             $this->base($t);

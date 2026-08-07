@@ -106,7 +106,7 @@ return new class extends Migration
             $table->softDeletes();
             $table->unique(['tenant_id', 'id']);
             $table->unique(['tenant_id', 'application_number']);
-            $table->unique(['tenant_id', 'campaign_id', 'paper_form_number']);
+            $table->unique(['tenant_id', 'campaign_id', 'paper_form_number'], 'admission_application_form_unique');
             $table->index(['tenant_id', 'campaign_id', 'status'], 'admission_application_queue_lookup');
             $table->index(['tenant_id', 'campaign_id', 'identity_fingerprint'], 'admission_application_duplicate_lookup');
             $table->foreign(['tenant_id', 'campaign_id'], 'admission_application_campaign_fk')->references(['tenant_id', 'id'])->on('admission_campaigns')->restrictOnDelete();
