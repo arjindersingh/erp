@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\Tenancy\Exceptions\TenantCouldNotBeResolved;
+use App\Core\Tenancy\TenantContext;
 use App\Http\Middleware\AssignCorrelationId;
 use App\Http\Middleware\AssignRequestId;
 use App\Http\Middleware\AttachPlatformContext;
@@ -39,6 +40,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'request-id' => AssignRequestId::class,
         ]);
         $middleware->redirectGuestsTo(fn (): string => route('home'));
+        $middleware->redirectUsersTo(function (Request $request): string {
+            if (app(TenantContext::class)->tenant() === null) {
+                return route('platform.setup');
+            }
+
+            return $request->session()->has('active_context')
+                ? route('portal.dashboard')
+                : route('context.select');
+        });
 
         $middleware->appendToGroup('web', [
             AssignRequestId::class,

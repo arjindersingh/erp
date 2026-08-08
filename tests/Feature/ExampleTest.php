@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * A basic test example.
      */
@@ -16,9 +18,8 @@ class ExampleTest extends TestCase
 
         $response
             ->assertStatus(200)
-            ->assertViewIs('home')
-            ->assertSee('Run every campus from one')
-            ->assertSee(route('api.health'), false)
-            ->assertSee(route('modules.health'), false);
+            ->assertSee('ERP portal shell')
+            ->assertSee('Staff login')
+            ->assertSee('Open campaigns');
     }
 }

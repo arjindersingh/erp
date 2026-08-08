@@ -13,10 +13,14 @@ return new class extends Migration
             $table->engine = 'InnoDB';
 
             $table->id();
+            $table->uuid('uuid')->unique();
 
             // Version values do not need VARCHAR(255).
             $table->string('version', 50);
             $table->string('build', 50);
+            $table->string('commit_hash', 64)->nullable();
+            $table->timestamp('deployed_at')->nullable();
+            $table->json('metadata')->nullable();
 
             $table->text('description')->nullable();
             $table->timestamps();

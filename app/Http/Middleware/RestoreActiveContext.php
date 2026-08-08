@@ -18,8 +18,16 @@ final class RestoreActiveContext
     {
         $tenant = app(TenantContext::class)->tenant();
         $payload = $request->session()->get('active_context');
-        if ($request->user() === null || $tenant === null || ! is_array($payload)) {
+        if ($request->user() === null) {
             abort(403, 'An active institutional context is required.');
+        }
+
+        if ($tenant === null) {
+            return redirect()->route('platform.setup');
+        }
+
+        if (! is_array($payload)) {
+            return redirect()->route('context.select');
         }
 
         try {
@@ -29,7 +37,8 @@ final class RestoreActiveContext
             );
         } catch (\Throwable) {
             $request->session()->forget('active_context');
-            abort(403, 'The active context has expired.');
+
+            return redirect()->route('context.select');
         }
         app()->instance(ActiveContext::class, $context);
         app(AcademicYearContext::class)->activate($context->academicYear, $context->scope);

@@ -9,9 +9,12 @@
             </div>
             <nav class="space-y-1">
                 <a href="{{ route('portal.dashboard') }}" class="block rounded-2xl px-4 py-3 text-slate-700 hover:bg-slate-100">Dashboard</a>
-                @foreach($modules as $module)
-                    <a href="{{ $module->default_route_name && Route::has($module->default_route_name) ? route($module->default_route_name) : route('portal.dashboard') }}" class="block rounded-2xl px-4 py-3 text-slate-700 hover:bg-slate-100">{{ $module->short_name ?: $module->name }}</a>
-                @endforeach
+                @if($modules->isNotEmpty())
+                    <p class="px-4 pt-4 text-xs font-semibold uppercase tracking-wide text-slate-400">Modules</p>
+                    @foreach($modules as $module)
+                        <a href="{{ route($module->default_route_name) }}" class="block rounded-2xl px-4 py-3 text-slate-700 hover:bg-slate-100">{{ $module->short_name ?: $module->name }}</a>
+                    @endforeach
+                @endif
                 <a href="{{ route('profile') }}" class="block rounded-2xl px-4 py-3 text-slate-700 hover:bg-slate-100">My profile</a>
                 <a href="{{ route('context.select') }}" class="block rounded-2xl px-4 py-3 text-slate-700 hover:bg-slate-100">Switch workspace</a>
             </nav>

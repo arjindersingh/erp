@@ -7,7 +7,13 @@
             </div>
             <div class="flex gap-3">
                 <a href="{{ route('admissions.public.index') }}" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Admissions</a>
-                <a href="{{ route('login') }}" class="rounded-xl bg-cyan-700 px-4 py-2 font-semibold text-white">Staff login</a>
+                <a href="{{ $staffEntryUrl }}" class="rounded-xl bg-cyan-700 px-4 py-2 font-semibold text-white">{{ $staffEntryLabel }}</a>
+                @auth
+                    <form method="post" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700">Sign out</button>
+                    </form>
+                @endauth
             </div>
         </div>
     </header>
@@ -20,7 +26,13 @@
                 <p class="mt-4 max-w-2xl text-lg leading-8 text-slate-600">The homepage now resolves the tenant context, surfaces the open admissions campaigns, and exposes the login and admissions entry points for visitors and applicants.</p>
                 <div class="mt-8 flex flex-wrap gap-3">
                     <a href="{{ route('admissions.public.index') }}" class="rounded-xl bg-slate-900 px-5 py-3 font-semibold text-white">Apply for admission</a>
-                    <a href="{{ route('login') }}" class="rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-700">Staff login</a>
+                    <a href="{{ $staffEntryUrl }}" class="rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-700">{{ $staffEntryLabel }}</a>
+                    @auth
+                        <form method="post" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-700">Sign out</button>
+                        </form>
+                    @endauth
                 </div>
             </div>
             <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">

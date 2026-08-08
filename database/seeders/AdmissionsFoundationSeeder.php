@@ -13,7 +13,7 @@ final class AdmissionsFoundationSeeder extends Seeder
     {
         Module::query()->updateOrCreate(['code' => 'admissions'], [
             'name' => 'Admissions', 'route_prefix' => 'admissions',
-            'default_route_name' => 'admissions.public.campaigns',
+            'default_route_name' => 'admissions.staff.dashboard',
             'module_type' => 'administrative', 'is_public' => true,
             'supports_academic_year' => true, 'supports_company_scope' => true,
             'supports_campus_scope' => true, 'supports_institute_scope' => true, 'status' => 'active',

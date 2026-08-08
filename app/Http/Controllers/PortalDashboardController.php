@@ -6,10 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Core\Authentication\ActiveContext;
 use App\Core\Authentication\AuthenticatedProfileResolver;
-use App\Core\Authorization\EffectiveAccessService;
 use App\Core\Identity\UserMembership;
 use App\Core\Layout\InterfaceLayoutResolver;
-use App\Core\Modules\Module;
+use App\Core\Modules\ModuleNavigationResolver;
 use App\Core\Tenancy\TenantContext;
 use App\Domains\Admissions\Models\AdmissionCampaign;
 use Illuminate\Http\Request;
@@ -17,22 +16,19 @@ use Illuminate\View\View;
 
 final class PortalDashboardController
 {
-    public function __invoke(Request $request, TenantContext $tenantContext, ActiveContext $context, AuthenticatedProfileResolver $profiles, EffectiveAccessService $access): View
+    public function __invoke(Request $request, TenantContext $tenantContext, ActiveContext $context, AuthenticatedProfileResolver $profiles, ModuleNavigationResolver $moduleNavigation): View
     {
         $tenant = $tenantContext->requireTenant();
         $portal = $context->portal;
         $content = $this->contentFor($portal->code);
-        $permissionCodes = $access->permissions($request->user(), $context)->pluck('code');
-        $modules = Module::query()->where('status', 'active')
-            ->whereHas('permissions', fn ($query) => $query->whereIn('code', $permissionCodes))
-            ->orderBy('display_order')->get();
+        $modules = $moduleNavigation->forContext($request->user(), $tenant, $context);
         $profileSet = $profiles->resolveFor($request->user(), $tenant);
         $profileLabel = $profileSet->person?->display_name ?? $request->user()->name;
         $layout = app(InterfaceLayoutResolver::class)->resolve($request->user(), $context);
 
         $stats = [
             ['label' => 'Active memberships', 'value' => UserMembership::withoutGlobalScopes()->where('tenant_id', $tenant->id)->selectable()->count()],
-            ['label' => 'Enabled modules', 'value' => Module::query()->where('status', 'active')->count()],
+            ['label' => 'Available modules', 'value' => $modules->count()],
             ['label' => 'Admissions campaigns', 'value' => AdmissionCampaign::query()->where('tenant_id', $tenant->id)->count()],
         ];
 
