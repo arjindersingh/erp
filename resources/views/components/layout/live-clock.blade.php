@@ -10,8 +10,6 @@
         return {
             serverTime: new Date(config.serverTime),
             timezone: config.timezone,
-            format: config.format,
-            showSeconds: config.showSeconds,
             display: '',
             interval: null,
 
@@ -34,17 +32,18 @@
             },
 
             updateDisplay() {
-                const options = {
-                    hour: this.format.includes('24') ? '2-digit' : 'numeric',
+                const parts = new Intl.DateTimeFormat('en-GB', {
+                    timeZone: this.timezone,
+                    day: '2-digit',
+                    month: 'short',
+                    year: '2-digit',
+                    hour: '2-digit',
                     minute: '2-digit',
-                    second: this.showSeconds ? '2-digit' : undefined,
-                    hour12: ! this.format.includes('24'),
-                    weekday: this.format.startsWith('long') ? 'long' : undefined,
-                    day: this.format.startsWith('long') ? 'numeric' : undefined,
-                    month: this.format.startsWith('long') ? 'long' : undefined,
-                    year: this.format.startsWith('long') ? 'numeric' : undefined,
-                };
-                this.display = new Intl.DateTimeFormat('en-US', options).format(this.serverTime);
+                    hour12: true,
+                    weekday: 'long',
+                }).formatToParts(this.serverTime).reduce((values, part) => ({ ...values, [part.type]: part.value }), {});
+
+                this.display = `${parts.day}-${parts.month}-${parts.year} (${parts.hour}:${parts.minute} ${parts.dayPeriod}) (${parts.weekday})`;
             },
 
             async sync() {

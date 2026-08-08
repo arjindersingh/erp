@@ -5,29 +5,16 @@ declare(strict_types=1);
 namespace App\Core\Settings;
 
 use App\Core\Authentication\ActiveContext;
-use App\Core\Settings\PortalInterfaceSetting;
-use App\Core\Settings\ResolvedInterfacePreferences;
-use App\Core\Settings\TenantInterfaceSetting;
-use App\Core\Settings\UiColourPalette;
-use App\Core\Settings\UiFontFamily;
-use App\Core\Settings\UiThemePreset;
-use App\Core\Settings\UserInterfacePreference;
 use App\Models\User;
-use Illuminate\Cache\Repository as CacheRepository;
 
 final class InterfacePreferenceResolver
 {
-    public function __construct(private CacheRepository $cache)
-    {
-    }
-
     public function resolve(User $user, ActiveContext $context): ResolvedInterfacePreferences
     {
         $tenant = $context->membership->tenant;
         $portal = $context->portal;
-        $cacheKey = $this->cacheKey($tenant->uuid, null, $portal->code, $user->uuid, 1);
 
-        return $this->cache->remember($cacheKey, now()->addMinutes(30), fn () => $this->build($user, $tenant->id, $portal->id, $portal->code));
+        return $this->build($user, $tenant->id, $portal->id, $portal->code);
     }
 
     private function build(User $user, int $tenantId, int $portalId, string $portalCode): ResolvedInterfacePreferences
@@ -80,10 +67,5 @@ final class InterfacePreferenceResolver
                 'simplified_layout' => $userPreferences?->simplified_layout ?? false,
             ],
         );
-    }
-
-    private function cacheKey(string $tenantUuid, ?string $instituteUuid, string $portalCode, string $userUuid, int $version): string
-    {
-        return "ui:tenant:{$tenantUuid}:institute:{$instituteUuid}:portal:{$portalCode}:user:{$userUuid}:version:{$version}";
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Core\AcademicYear\AcademicYearAccessService;
 use App\Core\AcademicYear\AcademicYearContext;
 use App\Core\Attribution\ActorContext;
 use App\Core\Attribution\ActorContextResolver;
+use App\Core\Authentication\ActiveContext;
 use App\Core\Platform\DomainEventRecorder;
 use App\Core\Platform\OutboxProcessor;
 use App\Core\Platform\ReferenceDataImportService;
@@ -20,9 +22,11 @@ use App\Domains\Academics\Contracts\AcademicNomenclatureProvider;
 use App\Domains\Academics\Contracts\ClassSectionProvider;
 use App\Domains\Academics\Contracts\ProgrammeSemesterProvider;
 use App\Domains\Academics\Contracts\SubjectOfferingProvider;
+use App\Domains\Academics\Models\AcademicYear;
 use App\Domains\Academics\Services\CanonicalAcademicProvider;
 use App\Domains\Academics\Services\ContractAcademicNomenclatureProvider;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,6 +58,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('components.layout.top-bar', function (View $view): void {
+            $context = app(ActiveContext::class);
+            $access = app(AcademicYearAccessService::class);
+
+            $academicYears = AcademicYear::withoutGlobalScopes()
+                ->where('tenant_id', $context->membership->tenant_id)
+                ->orderByDesc('starts_on')
+                ->get()
+                ->filter(fn (AcademicYear $year): bool => $access->canSelect($context->membership->user, $year, $context->scope))
+                ->values();
+
+            $view->with('academicYears', $academicYears);
+        });
     }
 }

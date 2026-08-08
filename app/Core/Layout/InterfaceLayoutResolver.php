@@ -5,34 +5,22 @@ declare(strict_types=1);
 namespace App\Core\Layout;
 
 use App\Core\Authentication\ActiveContext;
-use App\Core\Layout\PortalLayoutSetting;
-use App\Core\Layout\TenantLayoutSetting;
-use App\Core\Layout\UserLayoutPreference;
 use App\Core\Modules\Module;
-use App\Core\Navigation\Portal;
 use App\Core\Settings\InterfacePreferenceResolver;
 use App\Core\Settings\UiColourPalette;
 use App\Core\Settings\UiFontFamily;
 use App\Core\Settings\UiThemePreset;
-use App\Domains\Academics\Models\AcademicYear;
 use App\Models\User;
-use Illuminate\Cache\Repository as CacheRepository;
 
 final class InterfaceLayoutResolver
 {
     public function __construct(
         private InterfacePreferenceResolver $preferences,
-        private CacheRepository $cache,
-    ) {
-    }
+    ) {}
 
     public function resolve(User $user, ActiveContext $context, ?Module $module = null): ResolvedInterfaceLayout
     {
-        $tenant = $context->membership->tenant;
-        $portal = $context->portal;
-        $cacheKey = $this->cacheKey($tenant->id, $portal->id, $module?->id, $user->id);
-
-        return $this->cache->remember($cacheKey, now()->addMinutes(30), fn () => $this->build($user, $context, $module));
+        return $this->build($user, $context, $module);
     }
 
     private function build(User $user, ActiveContext $context, ?Module $module): ResolvedInterfaceLayout
@@ -110,10 +98,5 @@ final class InterfaceLayoutResolver
                 'layout_version' => 1,
             ],
         );
-    }
-
-    private function cacheKey(int $tenantId, int $portalId, ?int $moduleId, int $userId): string
-    {
-        return sprintf('layout:tenant:%d:portal:%d:module:%s:user:%d:version:1', $tenantId, $portalId, $moduleId ?? 'none', $userId);
     }
 }

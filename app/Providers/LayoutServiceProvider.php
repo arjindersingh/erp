@@ -15,7 +15,6 @@ final class LayoutServiceProvider extends ServiceProvider
         $this->app->singleton(InterfaceLayoutResolver::class, function ($app) {
             return new InterfaceLayoutResolver(
                 $app->make(InterfacePreferenceResolver::class),
-                $app->make('cache.store'),
             );
         });
     }

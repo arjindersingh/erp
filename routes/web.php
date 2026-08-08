@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\AcademicYearSelectionController;
 use App\Http\Controllers\AccessDiagnosticsController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ContextSelectionController;
-use App\Http\Controllers\PortalShellController;
-use App\Http\Controllers\PortalDashboardController;
 use App\Http\Controllers\PlatformSetupController;
+use App\Http\Controllers\PortalDashboardController;
+use App\Http\Controllers\PortalShellController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileInterfaceSettingsController;
 use App\Http\Controllers\SystemHealthController;
@@ -32,6 +33,9 @@ Route::middleware('auth')->group(function (): void {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::get('/context/select', [ContextSelectionController::class, 'create'])->name('context.select');
     Route::post('/context/select', [ContextSelectionController::class, 'store'])->name('context.store');
+    Route::post('/context/academic-year', AcademicYearSelectionController::class)
+        ->middleware(['active-context'])
+        ->name('context.academic-year.update');
     Route::get('/profile', ProfileController::class)->name('profile');
     Route::get('/dashboard', PortalDashboardController::class)->middleware(['active-context'])->name('portal.dashboard');
     Route::get('/profile/interface-settings', ProfileInterfaceSettingsController::class)
